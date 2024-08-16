@@ -20,14 +20,11 @@ This project is an Android application that displays a list of movies currently 
 
 Here are some screenshots of the application:
 
-### Home Screen
-![Home Screen](https://github.com/Fatih-Baser/MovieAndroidAppTask/blob/main/Screenshots/screen1.jpeg)
-
-### Search Screen
-![Search Screen](https://github.com/Fatih-Baser/MovieAndroidAppTask/blob/main/Screenshots/screen2.png)
-
-### Movie Details Screen
-![Movie Details Screen](https://github.com/Fatih-Baser/MovieAndroidAppTask/blob/main/Screenshots/screen3.png)
+<p align="center">
+  <img src="https://github.com/Fatih-Baser/MovieAndroidAppTask/blob/main/Screenshots/screen1.jpeg" alt="Home Screen" width="30%" />
+  <img src="https://github.com/Fatih-Baser/MovieAndroidAppTask/blob/main/Screenshots/screen2.jpeg" alt="Search Screen" width="30%" />
+  <img src="https://github.com/Fatih-Baser/MovieAndroidAppTask/blob/main/Screenshots/screen3.jpeg" alt="Movie Details Screen" width="30%" />
+</p>
 
 
 ### 🧪 Unit Testing
