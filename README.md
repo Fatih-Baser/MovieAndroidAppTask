@@ -33,8 +33,6 @@ Here are some screenshots of the application:
 ## 🛠️ Technologies Used
 
 ### Kotlin
-- The primary programming language used in this app.
-
 ### AndroidX Libraries
 - **Core KTX:** Provides Kotlin extensions for Android.
 - **AppCompat:** Ensures compatibility with older Android versions.
