@@ -16,6 +16,20 @@ This project is an Android application that displays a list of movies currently 
 ### 📝 MovieDetailsFragment
 - **Detailed Movie Information:** Provides detailed information about a movie, including its name, release date, trailer video, genres, poster, overview, cast, and more.
 
+## 📷 Screenshots
+
+Here are some screenshots of the application:
+
+### Home Screen
+![Home Screen](Screenshots/screen1.png)
+
+### Search Screen
+![Search Screen](Screenshots/screen2.png)
+
+### Movie Details Screen
+![Movie Details Screen](Screenshots/screen3.png)
+
+
 ### 🧪 Unit Testing
 - **Room Database Operations:** Includes unit tests for key database operations such as inserting, retrieving, and updating movies.
 
