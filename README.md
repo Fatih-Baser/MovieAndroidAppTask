@@ -21,7 +21,7 @@ This project is an Android application that displays a list of movies currently 
 Here are some screenshots of the application:
 
 ### Home Screen
-![Home Screen](Screenshots/screen1.png)
+![Home Screen](Screenshots/screen1.png](https://github.com/Fatih-Baser/MovieAndroidAppTask/blob/main/Screenshots/screen1.jpeg)
 
 ### Search Screen
 ![Search Screen](Screenshots/screen2.png)
