@@ -9,8 +9,8 @@
 <string name="imgV_moviecV_poster_cD">Movie Poster</string>
 <string name="imgV_moviecV_star_cD">Valoration of the Movie</string>
 <string name="tV_moviesF_popular_movies">Películas Populares</string>
-<string name="tV_moviesF_user_favorite_movies">Tus películas favoritas</string>
-<string name="tV_moviesF_now_playing_movies">Explorar que se está reproduciendo</string>
+<string name="tV_moviesF_user_favorite_movies">Favorite Movies</string>
+<string name="tV_moviesF_now_playing_movies">Current Movies in Cinema</string>
 <string name="tV_moviesF_upcoming_movies">Próximamente</string>
 <string name="tV_no_favorite_movies">Parece que aún no has agregado tus películas favoritas, recuerda que puedes hacerlo dando click al botón con un corazón cuando estes viendo infomación más detallada de una película.</string>
 <string name="tV_no_movies_for_no_internet_connection">No encontramos peliculas para ti, debido a que en estos momentos no tienes conexión a internet. Intenta conectarte y luego recarga la pantalla deslizando hacia abajo.</string>

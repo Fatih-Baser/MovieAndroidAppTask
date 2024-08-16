@@ -51,23 +51,12 @@ class MoviesFragment : Fragment(),
         // init LiveData Observers
         initLiveData()
         // Layout managers for each recyclerView
-        binding.rVPopularMovies.layoutManager =
-            LinearLayoutManager(
-                this.requireContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
         binding.rVUserFavoriteMovies.layoutManager = LinearLayoutManager(
             this.requireContext(),
             LinearLayoutManager.HORIZONTAL,
             false
         )
         binding.rVNowPlayingMovies.layoutManager = LinearLayoutManager(
-            this.requireContext(),
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        binding.rVUpcomingMovies.layoutManager = LinearLayoutManager(
             this.requireContext(),
             LinearLayoutManager.HORIZONTAL,
             false
@@ -119,13 +108,6 @@ class MoviesFragment : Fragment(),
             }
         )
         //// RecyclerView Data
-        // Popular Movies
-        viewModel.popularMoviesData.observe(
-            this,
-            Observer {
-                sendPopularMoviesToAdapter(it)
-            }
-        )
         // User Favorite Movies
         viewModel.userFavoriteMoviesData.observe(
             this,
@@ -138,24 +120,6 @@ class MoviesFragment : Fragment(),
             this,
             Observer {
                 sendNowPlayingMoviesAdapter(it)
-            }
-        )
-        // Upcoming Movies
-        viewModel.upcomingMoviesData.observe(
-            this,
-            Observer {
-                sendUpcomingMovies(it)
-            }
-        )
-        // No Popular movies msg
-        viewModel.setNoPopularMoviesVisibility.observe(
-            this,
-            Observer {
-                if (it) {
-                    binding.tVNoPopularMovies.visibility = View.VISIBLE
-                } else {
-                    binding.tVNoPopularMovies.visibility = View.GONE
-                }
             }
         )
         // No Favorite movies msg
@@ -180,30 +144,8 @@ class MoviesFragment : Fragment(),
                 }
             }
         )
-        // No Upcoming Movies msg
-        viewModel.setNoUpcomingMoviesVisibility.observe(
-            this,
-            Observer {
-                if (it) {
-                    binding.tVNoUpcomingMovies.visibility = View.VISIBLE
-                } else {
-                    binding.tVNoUpcomingMovies.visibility = View.GONE
-                }
-            }
-        )
     }
 
-    // Popular Movies
-    private fun sendPopularMoviesToAdapter (
-        moviesList: List<Movie>
-    ) {
-        popularMoviesAdapter = MovieAdapter(
-            moviesList,
-            this
-        )
-        binding.rVPopularMovies.adapter = popularMoviesAdapter
-    }
-    // User Favorite Movies
     private fun sendUserFavoriteMoviesToAdapter (
         moviesList: List<Movie>
     ) {
@@ -223,17 +165,6 @@ class MoviesFragment : Fragment(),
         )
         binding.rVNowPlayingMovies.adapter = nowPlayingMovieAdapter
     }
-    // Upcoming Movies
-    private fun sendUpcomingMovies (
-        moviesList: List<Movie>
-    ) {
-        upcomingMoviesAdapter = MovieAdapter(
-            moviesList,
-            this
-        )
-        binding.rVUpcomingMovies.adapter = upcomingMoviesAdapter
-    }
-
 
     override fun onItemClicked(selectedItem: Int, movieIDSelected: String) {
         viewModel.onMovieClicked(movieIDSelected)
