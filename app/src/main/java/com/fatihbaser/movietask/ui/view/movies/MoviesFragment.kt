@@ -20,22 +20,18 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MoviesFragment : Fragment(),
     MovieAdapter.OnItemClickListener,
-    SwipeRefreshLayout.OnRefreshListener
-{
-    // Init Vars
-    // Binding
+    SwipeRefreshLayout.OnRefreshListener {
+
     private lateinit var binding: FragmentMoviesBinding
-    // ViewModel
+
     private val viewModel: MoviesViewModel by viewModels<MoviesViewModel>()
-    // Adapters RecyclerView
-    // Popular Movies
-    private lateinit var popularMoviesAdapter: MovieAdapter
+
     // User Favorite Movies
     private lateinit var userFavoriteMoviesAdapter: MovieAdapter
+
     // Now Playing Movies
     private lateinit var nowPlayingMovieAdapter: MovieAdapter
-    // Upcoming Movies
-    private lateinit var upcomingMoviesAdapter: MovieAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,14 +39,11 @@ class MoviesFragment : Fragment(),
     ): View? {
         binding = FragmentMoviesBinding.inflate(inflater)
         initView()
-        // Inflate the layout for this fragment
         return binding.root
     }
 
     private fun initView() {
-        // init LiveData Observers
         initLiveData()
-        // Layout managers for each recyclerView
         binding.rVUserFavoriteMovies.layoutManager = LinearLayoutManager(
             this.requireContext(),
             LinearLayoutManager.HORIZONTAL,
@@ -61,18 +54,10 @@ class MoviesFragment : Fragment(),
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        // onCreate viewModel
         viewModel.onCreate()
-        // Listeners
         binding.refreshMovies.setOnRefreshListener(this)
     }
-    // Popular Movies
-    // User Favorite Movies
-    // Now Playing Movies
-    // Upcoming Movies
-
     private fun initLiveData() {
-        //// Progress
         viewModel.setProgressVisibility.observe(
             this,
             Observer {
@@ -83,13 +68,11 @@ class MoviesFragment : Fragment(),
                 }
             }
         )
-        //// Navigation
         viewModel.goToMovieInfoFragment.observe(
             this,
             Observer {
-                // Go to the Movie Details Fragment
                 if (it != null) {
-                    if (it>0) {
+                    if (it > 0) {
                         findNavController()
                             .navigate(
                                 MoviesFragmentDirections
@@ -100,40 +83,34 @@ class MoviesFragment : Fragment(),
                 }
             }
         )
-        //// Refresh
         viewModel.refreshVisibility.observe(
             this,
             Observer {
                 binding.refreshMovies.isRefreshing = it
             }
         )
-        //// RecyclerView Data
-        // User Favorite Movies
         viewModel.userFavoriteMoviesData.observe(
             this,
             Observer {
                 sendUserFavoriteMoviesToAdapter(it)
             }
         )
-        // Now Playing Movies
         viewModel.nowPlayingMoviesData.observe(
             this,
             Observer {
                 sendNowPlayingMoviesAdapter(it)
             }
         )
-        // No Favorite movies msg
         viewModel.setNoFavoriteMoviesVisibility.observe(
             this,
             Observer {
-                if (it){
+                if (it) {
                     binding.tVNoFavoriteMovies.visibility = View.VISIBLE
                 } else {
                     binding.tVNoFavoriteMovies.visibility = View.GONE
                 }
             }
         )
-        // No Now Playing Movies msg
         viewModel.setNoNowPlayingMoviesVisibility.observe(
             this,
             Observer {
@@ -146,7 +123,7 @@ class MoviesFragment : Fragment(),
         )
     }
 
-    private fun sendUserFavoriteMoviesToAdapter (
+    private fun sendUserFavoriteMoviesToAdapter(
         moviesList: List<Movie>
     ) {
         userFavoriteMoviesAdapter = MovieAdapter(
@@ -155,8 +132,8 @@ class MoviesFragment : Fragment(),
         )
         binding.rVUserFavoriteMovies.adapter = userFavoriteMoviesAdapter
     }
-    // Now Playing Movies
-    private fun sendNowPlayingMoviesAdapter (
+
+    private fun sendNowPlayingMoviesAdapter(
         moviesList: List<Movie>
     ) {
         nowPlayingMovieAdapter = MovieAdapter(

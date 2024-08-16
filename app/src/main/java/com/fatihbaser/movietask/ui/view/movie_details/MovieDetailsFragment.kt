@@ -34,22 +34,13 @@ class MovieDetailsFragment : Fragment(),
     View.OnClickListener,
     MovieAdapter.OnItemClickListener,
     ReviewAdapter.OnItemClickListener,
-    SwipeRefreshLayout.OnRefreshListener
-{
+    SwipeRefreshLayout.OnRefreshListener {
 
-    // Init Vars
-    // Binding
     private lateinit var binding: FragmentMovieDetailsBinding
-    // Safe Args reference
     private val movieIdNavArgs by navArgs<MovieDetailsFragmentArgs>()
-    // ViewModel
-    private  val viewModel: MovieDetailsViewModel by viewModels<MovieDetailsViewModel>()
-    // Adapters RecyclerView
-    // Movie Cast
+    private val viewModel: MovieDetailsViewModel by viewModels<MovieDetailsViewModel>()
     private lateinit var movieCastAdapter: ActorAdapter
-    // Similar Movies
     private lateinit var similarMoviesAdapter: MovieAdapter
-    // Movie Review
     private lateinit var movieReviewsAdapter: ReviewAdapter
 
     override fun onCreateView(
@@ -58,15 +49,11 @@ class MovieDetailsFragment : Fragment(),
     ): View? {
         binding = FragmentMovieDetailsBinding.inflate(inflater)
         initView()
-        // Inflate the layout for this fragment
         return binding.root
     }
 
     private fun initView() {
-        // init LiveData Observers
         initLiveData()
-        // Layout managers for each recyclerView
-        // Movie Cast
         binding.rVMovieCast.layoutManager =
             LinearLayoutManager(
                 this.requireContext(),
@@ -102,7 +89,6 @@ class MovieDetailsFragment : Fragment(),
     }
 
     private fun initLiveData() {
-        //// Progress
         viewModel.setProgressVisibility.observe(
             this,
             Observer {
@@ -113,15 +99,12 @@ class MovieDetailsFragment : Fragment(),
                 }
             }
         )
-        //// Info msg
         viewModel.showInfoMessage.observe(
             this,
             Observer {
                 this.requireActivity().toast(it)
             }
         )
-        //// Navigation
-        // Go back to Movies Fragment
         viewModel.goToMoviesFragment.observe(
             this,
             Observer {
@@ -129,25 +112,13 @@ class MovieDetailsFragment : Fragment(),
                     this.requireActivity().onBackPressedDispatcher.onBackPressed()
                     viewModel.navigationComplete()
                 }
-
-                // Go to the Movie Fragment
-                /*if (it == true) {
-                    findNavController()
-                        .navigate(
-                            MovieDetailsFragmentDirections
-                                .actionMovieDetailsFragmentToMoviesFragment()
-                        )
-                    viewModel.navigationComplete()
-                }*/
             }
         )
-        // Charge Similar Movie Info on the same Fragment
         viewModel.goToNewMovieInfoFragment.observe(
             this,
             Observer {
-                // Go to the same fragment with other movie info
                 if (it != null) {
-                    if (it>0) {
+                    if (it > 0) {
                         findNavController()
                             .navigate(
                                 MovieDetailsFragmentDirections
@@ -349,7 +320,7 @@ class MovieDetailsFragment : Fragment(),
     }
 
     // Movie Cast
-    private fun sendMovieCastToAdapter (
+    private fun sendMovieCastToAdapter(
         castList: List<Actor>
     ) {
         movieCastAdapter = ActorAdapter(
@@ -359,7 +330,7 @@ class MovieDetailsFragment : Fragment(),
     }
 
     // Similar Movies
-    private fun sendSimilarMoviesToAdapter (
+    private fun sendSimilarMoviesToAdapter(
         similarMovies: List<Movie>
     ) {
         similarMoviesAdapter = MovieAdapter(
@@ -370,7 +341,7 @@ class MovieDetailsFragment : Fragment(),
     }
 
     // Movie Reviews
-    private fun sendMovieReviewsToAdapter (
+    private fun sendMovieReviewsToAdapter(
         movieReviews: List<Review>
     ) {
         movieReviewsAdapter = ReviewAdapter(

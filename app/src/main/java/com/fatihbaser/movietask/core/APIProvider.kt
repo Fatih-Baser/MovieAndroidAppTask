@@ -13,16 +13,6 @@ class APIProvider @Inject constructor(
     private val baseURLForSearch = "search/movie"
     // Base Image Resource URL
     private val baseImgResURL = "https://image.tmdb.org/t/p/"
-    // Getting Popular Movies URL
-    // 19 result per page
-    // https://developers.themoviedb.org/3/movies/get-popular-movies
-    fun getPopularMoviesBaseURL (
-        languageCode: String = "en", // ISO 639-1 language code value
-        countryCode: String = "US", // ISO 3166-1 country code value (only Uppercase accepted)
-        resultsPage: Int = 1 // minimum val = 1 - maximum val = 1000
-    ): String {
-        return "${baseURL}popular?api_key=${apiKey}&language=${languageCode}-${countryCode}&page=${resultsPage}"
-    }
     // Getting Now Playing Movies URL
     // https://developers.themoviedb.org/3/movies/get-now-playing
     fun getNowPlayingMoviesBaseURL (
@@ -31,15 +21,6 @@ class APIProvider @Inject constructor(
         resultsPage: Int = 1
     ): String {
         return "${baseURL}now_playing?api_key=${apiKey}&language=${languageCode}-${countryCode}&page=${resultsPage}"
-    }
-    // Getting Upcoming Movies URL
-    // https://developers.themoviedb.org/3/movies/get-upcoming
-    fun getUpcomingMoviesBaseURL (
-        languageCode: String = "en",
-        countryCode: String = "US",
-        resultsPage: Int = 1
-    ): String {
-        return "${baseURL}upcoming?api_key=${apiKey}&language=${languageCode}-${countryCode}&page=${resultsPage}"
     }
     // Getting Full URL image resource from a movie
     // https://developers.themoviedb.org/3/getting-started/images
