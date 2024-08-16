@@ -7,7 +7,7 @@ class APIProvider @Inject constructor(
 
 ) {
     // My https://www.themoviedb.org API key
-    private val apiKey = "c0199c92f22d6754839f34f4e01a01ac"
+    private val apiKey = "818687474aa03ede6f29946083df70c7"
     // Base URL
     private val baseURL = "movie/"
     private val baseURLForSearch = "search/movie/"

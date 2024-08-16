@@ -5,56 +5,242 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.fatihbaser.movietask.R
+import com.fatihbaser.movietask.data.model.entity.Movie
+import com.fatihbaser.movietask.databinding.FragmentMoviesBinding
+import com.fatihbaser.movietask.ui.view.movies.adapters.MovieAdapter
+import com.fatihbaser.movietask.ui.viewmodel.movies.MoviesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MoviesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MoviesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+@AndroidEntryPoint
+class MoviesFragment : Fragment(),
+    MovieAdapter.OnItemClickListener,
+    SwipeRefreshLayout.OnRefreshListener
+{
+    // Init Vars
+    // Binding
+    private lateinit var binding: FragmentMoviesBinding
+    // ViewModel
+    private val viewModel: MoviesViewModel by viewModels<MoviesViewModel>()
+    // Adapters RecyclerView
+    // Popular Movies
+    private lateinit var popularMoviesAdapter: MovieAdapter
+    // User Favorite Movies
+    private lateinit var userFavoriteMoviesAdapter: MovieAdapter
+    // Now Playing Movies
+    private lateinit var nowPlayingMovieAdapter: MovieAdapter
+    // Upcoming Movies
+    private lateinit var upcomingMoviesAdapter: MovieAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentMoviesBinding.inflate(inflater)
+        initView()
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movies, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MoviesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MoviesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun initView() {
+        // init LiveData Observers
+        initLiveData()
+        // Layout managers for each recyclerView
+        binding.rVPopularMovies.layoutManager =
+            LinearLayoutManager(
+                this.requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+        binding.rVUserFavoriteMovies.layoutManager = LinearLayoutManager(
+            this.requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        binding.rVNowPlayingMovies.layoutManager = LinearLayoutManager(
+            this.requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        binding.rVUpcomingMovies.layoutManager = LinearLayoutManager(
+            this.requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        // onCreate viewModel
+        viewModel.onCreate()
+        // Listeners
+        binding.refreshMovies.setOnRefreshListener(this)
+    }
+    // Popular Movies
+    // User Favorite Movies
+    // Now Playing Movies
+    // Upcoming Movies
+
+    private fun initLiveData() {
+        //// Progress
+        viewModel.setProgressVisibility.observe(
+            this,
+            Observer {
+                if (it) {
+                    binding.pgsBMovies.visibility = View.VISIBLE
+                } else {
+                    binding.pgsBMovies.visibility = View.GONE
                 }
             }
+        )
+        //// Navigation
+        viewModel.goToMovieInfoFragment.observe(
+            this,
+            Observer {
+                // Go to the Movie Details Fragment
+                if (it != null) {
+                    if (it>0) {
+                        findNavController()
+                            .navigate(
+                                MoviesFragmentDirections
+                                    .actionMoviesFragmentToMovieDetailsFragment(it)
+                            )
+                        viewModel.navigationCompleted()
+                    }
+                }
+            }
+        )
+        //// Refresh
+        viewModel.refreshVisibility.observe(
+            this,
+            Observer {
+                binding.refreshMovies.isRefreshing = it
+            }
+        )
+        //// RecyclerView Data
+        // Popular Movies
+        viewModel.popularMoviesData.observe(
+            this,
+            Observer {
+                sendPopularMoviesToAdapter(it)
+            }
+        )
+        // User Favorite Movies
+        viewModel.userFavoriteMoviesData.observe(
+            this,
+            Observer {
+                sendUserFavoriteMoviesToAdapter(it)
+            }
+        )
+        // Now Playing Movies
+        viewModel.nowPlayingMoviesData.observe(
+            this,
+            Observer {
+                sendNowPlayingMoviesAdapter(it)
+            }
+        )
+        // Upcoming Movies
+        viewModel.upcomingMoviesData.observe(
+            this,
+            Observer {
+                sendUpcomingMovies(it)
+            }
+        )
+        // No Popular movies msg
+        viewModel.setNoPopularMoviesVisibility.observe(
+            this,
+            Observer {
+                if (it) {
+                    binding.tVNoPopularMovies.visibility = View.VISIBLE
+                } else {
+                    binding.tVNoPopularMovies.visibility = View.GONE
+                }
+            }
+        )
+        // No Favorite movies msg
+        viewModel.setNoFavoriteMoviesVisibility.observe(
+            this,
+            Observer {
+                if (it){
+                    binding.tVNoFavoriteMovies.visibility = View.VISIBLE
+                } else {
+                    binding.tVNoFavoriteMovies.visibility = View.GONE
+                }
+            }
+        )
+        // No Now Playing Movies msg
+        viewModel.setNoNowPlayingMoviesVisibility.observe(
+            this,
+            Observer {
+                if (it) {
+                    binding.tVNoNowPlayingMovies.visibility = View.VISIBLE
+                } else {
+                    binding.tVNoNowPlayingMovies.visibility = View.GONE
+                }
+            }
+        )
+        // No Upcoming Movies msg
+        viewModel.setNoUpcomingMoviesVisibility.observe(
+            this,
+            Observer {
+                if (it) {
+                    binding.tVNoUpcomingMovies.visibility = View.VISIBLE
+                } else {
+                    binding.tVNoUpcomingMovies.visibility = View.GONE
+                }
+            }
+        )
     }
+
+    // Popular Movies
+    private fun sendPopularMoviesToAdapter (
+        moviesList: List<Movie>
+    ) {
+        popularMoviesAdapter = MovieAdapter(
+            moviesList,
+            this
+        )
+        binding.rVPopularMovies.adapter = popularMoviesAdapter
+    }
+    // User Favorite Movies
+    private fun sendUserFavoriteMoviesToAdapter (
+        moviesList: List<Movie>
+    ) {
+        userFavoriteMoviesAdapter = MovieAdapter(
+            moviesList,
+            this
+        )
+        binding.rVUserFavoriteMovies.adapter = userFavoriteMoviesAdapter
+    }
+    // Now Playing Movies
+    private fun sendNowPlayingMoviesAdapter (
+        moviesList: List<Movie>
+    ) {
+        nowPlayingMovieAdapter = MovieAdapter(
+            moviesList,
+            this
+        )
+        binding.rVNowPlayingMovies.adapter = nowPlayingMovieAdapter
+    }
+    // Upcoming Movies
+    private fun sendUpcomingMovies (
+        moviesList: List<Movie>
+    ) {
+        upcomingMoviesAdapter = MovieAdapter(
+            moviesList,
+            this
+        )
+        binding.rVUpcomingMovies.adapter = upcomingMoviesAdapter
+    }
+
+
+    override fun onItemClicked(selectedItem: Int, movieIDSelected: String) {
+        viewModel.onMovieClicked(movieIDSelected)
+    }
+
+    override fun onRefresh() {
+        viewModel.onRefresh()
+    }
+
 }
