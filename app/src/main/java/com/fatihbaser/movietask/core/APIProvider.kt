@@ -10,7 +10,7 @@ class APIProvider @Inject constructor(
     private val apiKey = "818687474aa03ede6f29946083df70c7"
     // Base URL
     private val baseURL = "movie/"
-    private val baseURLForSearch = "search/movie/"
+    private val baseURLForSearch = "search/movie"
     // Base Image Resource URL
     private val baseImgResURL = "https://image.tmdb.org/t/p/"
     // Getting Popular Movies URL

@@ -100,6 +100,11 @@ class MovieToSearchInfoService @Inject constructor(
         val search = retrofit
             .create(APIService::class.java)
             .getMovies(a)
-        return search?.body()
+        if (search?.isSuccessful == true) {
+            return search.body()
+        } else {
+            Timber.e("API call failed: ${search?.errorBody()?.string()}")
+            return null
+        }
     }
 }
